@@ -1,1 +1,1 @@
-web: gunicorn app:utakeout
+web: gunicorn run:app
