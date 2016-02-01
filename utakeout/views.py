@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from utakeout import app
-from helpers import get_lat_lon
+from helpers import analysis
 # from forms import AddressForm
 
 
@@ -13,5 +13,5 @@ def index():
 
 @app.route('/score/<address>')
 def score(address):
-    coords = get_lat_lon(address)
-    return render_template('score.html', address=coords)
+    score_data = analysis(address)
+    return render_template('score.html', address=score_data)
