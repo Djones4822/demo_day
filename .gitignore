@@ -2,7 +2,9 @@
 /venv
 *.pyc
 *pyproj
-
+*.csv
+/.vs
+*.suo
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
