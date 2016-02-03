@@ -1,11 +1,7 @@
-﻿<!DOCTYPE HTML>
-<html>
-<head>
-    <title>uTakeout</title>
-</head>
-<body>
-    <div align=center>
+﻿<!-- extend base layout -->
+{% extends "base.html" %}
+{% block content %}
+    <div>
         <p>{{ address|pprint }}</p>
     </div>
-</body>
-</html>
+{% endblock %}

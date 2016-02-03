@@ -77,7 +77,6 @@ def get_yelp_results(lat, lon):
         ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance}
     #pprint(ratings_dict)
     return ratings_dict, results_json
-        
 
 def get_distances_link(lat, lon, ratings_dict):
     home = '{},{}'.format(lat,lon)
@@ -230,10 +229,12 @@ def analysis(address):
                     'pol_row':closest_pol,
                     'avg_walk':avg_walk,
                     'avg_good_dr':avg_good_dr,
-                    'avg_bad_dr':avg_bad_dr,
-                    'yelp_results':yelp_results
+                    'avg_bad_dr':avg_bad_dr
+                    # 'yelp_results':yelp_results
                     }
     return final_result
+
+#score_data['
 
     
 # pprint(analysis('2042 barberrie ln, decatur, ga 30032')) 

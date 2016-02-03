@@ -1,15 +1,65 @@
-﻿<!DOCTYPE HTML>
-<html>
-<head>
-    <title>uTakeout</title>
-</head>
-<body>
-    <div align=center>
-        <h3> Please enter your Address (US Only)</h3>
-        <form role="form" action="" method="POST">
-            <input name="address" placeholder="Your Address Here">
-            <button type="submit">Go!</button>
-        </form>
+﻿<!-- extend base layout -->
+{% extends "base.html" %}
+{% block content %}
+
+
+<header>
+    <div class="header-content">
+        <div class="header-content-inner">
+            <h1>uTakeout</h1>
+            <hr>
+            <p>Get your fucking takeout score!</p>
+            <form class="form-inline" role="form" action="" method="POST">
+                <div class="form-group">
+                    <input name="address" class="form-control" placeholder="Address">
+                    <button type="submit" class="btn btn-default">Go!</button>
+                </div>
+            </form>
+            <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
+        </div>
     </div>
-</body>
-</html>
+</header>
+
+
+
+
+<!--
+
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <h3 class="masthead-brand">uTakeout</h3>
+                    <nav>
+                        <ul class="nav masthead-nav">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="inner cover">
+                <h1 class="cover-heading">Welcome to uTakeout</h1>
+                <p class="lead">Enter an address and we'll tell you how good your spot is for getting takeout!</p>
+                <p class="lead">
+                    <form class="form-inline" role="form" action="" method="POST">
+                        <div class="form-group">
+                            <input name="address" class="form-control" placeholder="Address">
+                            <button type="submit" class="btn btn-default">Go!</button>
+                        </div>
+                    </form>
+                </p>
+            </div>
+            <div class="mastfoot">
+                <div class="inner">
+                    <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+-->
+{% endblock %}
