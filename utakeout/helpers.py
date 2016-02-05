@@ -198,7 +198,7 @@ def analysis(address):
     closest_pol_dist, closest_pol = get_closest_police(str(address_dict['state']), 
                                                         address_dict['lat'], 
                                                         address_dict['lng'])
-    pol_name = closest_pol[1]
+    pol_name = closest_pol[0]
     
     lum = get_lum(address_dict['postal_code'])
 
@@ -230,12 +230,12 @@ def analysis(address):
                     'pol_row':closest_pol,
                     'avg_walk':avg_walk,
                     'avg_good_dr':avg_good_dr,
-                    'avg_bad_dr':avg_bad_dr
-                    # 'yelp_results':yelp_results
+                    'avg_bad_dr':avg_bad_dr,
+                    'yelp_results':yelp_dict
                     }
     return final_result
 
 #score_data['
 
     
-# pprint(analysis('2042 barberrie ln, decatur, ga 30032')) 
+# pprint(analysis('2042 barberrie ln, decatur, ga 30032')['yelp_results']) 

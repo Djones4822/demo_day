@@ -70,26 +70,50 @@
 
     <div class="takeout-section">
         <div class="container">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="above-grade text-center">
                     <h3>Address</h3>
                 </div>    
                 <div class="line"></div>
+                
+            </div>
+            
+            <div class="col-md-8">
+                <div class="above-grade">
+                    <h3 class="text-center">Takeout Grade</h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container">
+            <div class="col-md-4">
                 <div class="user-address text-center">
                     <p>{{ number }} {{ street }}<br>{{ town }}, {{ state }}<br>{{ zip }}</p>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="above-grade">
-                    <h3 class="text-center">Takeout Grade</h3>
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <div class="rest-stats">
+                    <dl class="dl-horizontal">
+                        <dt># Reviewed</dt>
+                        <dd>{{ num_places }}</dd>
+                        <dt>Avg Rating</dt>
+                        <dd>###</dd>
+                        <dt>Total Reviews</dt>
+                        <dd>{{ sum_reviews }}</dd>
+                    </dl>
                 </div>
+            </div>
+
+            <div class="col-md-4">
                 <div class="responsive-circle">
                     <div class="circle-inner">A-</div>
                 </div>
             </div>
-        
+            
         </div>
+
     </div>
  
 
@@ -187,17 +211,15 @@
                 function initMap() {
                     var mapDiv = document.getElementById('map');
                     var map = new google.maps.Map(mapDiv, {
-                        center: { lat: 44.540, lng: -78.546 },
-                        zoom: 11
+                        center: { lat: {{ address_lat }}, lng: {{ address_lng }} },
+                        zoom: 13
                     });
                     setMarkers(map);
                 }
+
                 function setMarkers(map) {
-                    var spots = [
-                    ['name', 44.6, -78.4],
-                    ['name', 44.7, -78.3],
-                    ['name', 44.8, -78.2]
-                    ];
+
+                    var spots = {{ yelp_markers|safe }};
 
                     for (var i = 0; i < spots.length; i++) {
                         var spot = spots[i];
@@ -206,6 +228,11 @@
                             map: map
                         });
                     }
+
+                    var marker = new google.maps.Marker({
+                            position: { lat: {{ address_lat }}, lng: {{ address_lng }} },
+                            map: map
+                        });
                 }
             </script>
         </div>
@@ -220,18 +247,14 @@
                     <th>Reviews</th>
                     <th>Distance</th>
                 </tr>
+                {% for restaurant in restaurants %}
                 <tr>
-                    <td>Popeyes</td>
-                    <td>4.5</td>
-                    <td>341</td>
-                    <td>1.3 miles</td>
+                    <td>{{ restaurant.name }}</td>
+                    <td>{{ restaurant.rating }}</td>
+                    <td>{{ restaurant.review_count }}</td>
+                    <td>{{ restaurant.distance }}</td>
                 </tr>
-                <tr>
-                    <td>Chipotle</td>
-                    <td>4.5</td>
-                    <td>341</td>
-                    <td>1.3 miles</td>
-                </tr>
+                {% endfor %}
             </table>
         </div>    
     </div>
