@@ -183,7 +183,7 @@ def get_lum(zipcode):
     data = cursor.fetchall()
     cursor.close()
     conn.close()
-    return data[-1]
+    return data[0][-1]
 
     
 def analysis(address):
@@ -221,6 +221,7 @@ def analysis(address):
     avg_bad_dr = sum(bad_drive_dist)/len(bad_drive_dist)
     
     final_result = {
+                    'address':address_dict,
                     'Average_review':weighted_score,
                     'total_reviews':total_rev,
                     'lum':lum,

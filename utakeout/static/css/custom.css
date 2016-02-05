@@ -1,0 +1,242 @@
+.go-button {
+    padding:100px;
+}
+
+.responsive-circle {
+    font-size: 4.8em;
+    font-weight: 700;
+    margin: 0 auto 20px;
+    width: 50%;
+}
+.responsive-circle::after {
+    border-radius: 50%;
+    content: "";
+    display: block;
+    height: 0;
+    margin-bottom: 20px;
+    padding-bottom: 100%;
+    width: 100%;
+    background:#445878;
+}
+.responsive-circle div {
+    color: #fff;
+    float: left;
+    line-height: 1em;
+    margin-top: -0.5em;
+    padding-top: 50%;
+    text-align: center;
+    width: 100%;
+}
+
+.responsive-square {
+    font-size: 3.5em;
+    font-weight: 700;
+    margin: 0 auto 20px;
+    width: 50%;
+}
+.responsive-square::after {
+    content: "";
+    display: block;
+    height: 0;
+    margin-bottom: 20px;
+    padding-bottom: 100%;
+    width: 100%;
+    background:#92CDCF;
+}
+
+.responsive-square div {
+    color: white;
+    float: left;
+    line-height: 1em;
+    margin-top: -0.5em;
+    padding-top: 50%;
+    text-align: center;
+    width: 100%;
+}
+
+body {
+    background-color:#fff;
+}
+
+h3 {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 700;
+    font-size:2.2em;
+    color: #31353D;
+}
+
+.user-address {
+    padding:50px;
+    margin:auto;
+}
+
+.user-address p {
+    font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight:;
+    font-size:1.6em;
+    color: #31353D;
+}
+
+.above-grade {
+    padding:25px;
+    margin:auto;
+}
+
+.takeout-section {
+    background-color:#EEEFF7;
+    padding-top:50px;
+    padding-bottom:40px;
+}
+
+.data-section {
+    background-color:#fff;
+    padding-top:50px;
+    padding-bottom:40px;
+}
+
+.map-section {
+    background-color:#EEEFF7;
+    padding:30px;
+}
+
+.yelp-section{
+    background-color:#fff;
+    padding:50px;
+}
+
+.walk-drive {
+    display:block;
+    position:relative;
+    max-width:400px;
+    height:440px;
+    margin:auto auto 15px;
+    right:0;
+    padding:10px;
+    background-color:#fff;
+    border-style:solid;
+    border-color:#eee;
+    border-width:.5px;
+}
+
+.grade {
+    padding:25px;
+    padding-bottom:10px;
+
+}
+
+.grade p {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 700;
+    font-size:1.6em;
+    color: #;
+}
+
+.grade h1 {
+    text-transform: uppercase;
+    font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-size: 4em;   
+    font-weight:700;
+
+}
+
+.line {
+    position: relative;
+    margin:auto;
+    width: 60px;
+    height: 2px;
+    background-color:#1C1D21;
+}
+
+
+.data {
+    max-width:400px;
+    min-height:;
+    padding-top:10px;
+    margin:0 auto;
+    background-color:#fff;
+    text-align:center;
+}
+
+.data p {
+    text-transform:none;  
+    font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
+    color: #969696;
+    font-weight:;
+    font-size:.9em;
+}
+
+.data h4 {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 600;
+    font-size:1em;
+    color: #;
+
+}
+
+.crime {
+    padding:25px;
+    padding-bottom:10px;
+}
+
+.crime p {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 700;
+    font-size: 1.6em;
+    color: #;
+}
+
+.crime-data {
+    max-width:400px;
+    min-height:;
+    padding-top:25px;
+    margin:0 auto;
+    background-color:#fff;
+    text-align:center;
+}
+
+.crime-data p {
+    text-transform:;  
+    font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
+    color: #969696;
+    font-weight:;
+    font-size:.9em;
+}
+
+.crime-data h4 {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 600;
+    font-size:1em;
+    color: #;
+}
+
+th {
+    text-transform: uppercase;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 700;
+    color: #;
+}
+
+td {
+    text-transform:;  
+    font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
+    color: #60686B;
+    font-weight:;
+    font-size:.9em;
+}
+
+.yelp-table {
+    margin:auto;
+}
+
+#map {
+    margin:20px auto 20px auto;
+    position:relative;
+    padding:200px;
+    width:75%;
+    height:100%;
+}
