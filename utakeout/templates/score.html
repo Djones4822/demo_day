@@ -148,7 +148,7 @@
                             <h4>Closest Reporting Agency</h4>
                             <p>{{ rep_agency }}</p>
                             <h4>Distance to Agency</h4>
-                            <p>{{ rep_agency_dist }}</p>                
+                            <p>{{ "{:,.2f}".format(rep_agency_dist) }} mi.</p>                
                             <h4>Violent Crime</h4>
                             <p>### p.c</p>
                             <h4>Property Crime</h4>            
@@ -241,19 +241,20 @@
 
     <div class="yelp-section">
         <div class="container">
+            <img src="/static/img/yelp-logo.png" class="yelp-img">
             <table class="table table-condensed yelp-table">
                 <tr>
                     <th>Name</th>
-                    <th>Rating</th>
-                    <th>Reviews</th>
-                    <th>Distance</th>
+                    <th class="text-right">Rating</th>
+                    <th class="text-right">Reviews</th>
+                    <th class="text-right">Distance (meters)</th>
                 </tr>
                 {% for restaurant in restaurants %}
                 <tr>
-                    <td>{{ restaurant.name }}</td>
-                    <td>{{ restaurant.rating }}</td>
-                    <td>{{ restaurant.review_count }}</td>
-                    <td>{{ restaurant.distance }}</td>
+                    <td><a href="{{ restaurant.url }}">{{ restaurant.name }}</a></td>
+                    <td align="right">{{ restaurant.rating }}</td>
+                    <td align="right">{{ restaurant.review_count }}</td>
+                    <td align="right">{{ "{:,.1f}".format(restaurant.distance) }}</td>
                 </tr>
                 {% endfor %}
             </table>

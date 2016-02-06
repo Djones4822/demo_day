@@ -15,7 +15,7 @@ def index():
 @app.route('/score/<address>')
 def score(address):
     score_data = analysis(address)
-    yelp_list = score_data['yelp_results'].values()
+    yelp_list = sorted(score_data['yelp_results'].values(), key=lambda k: k['distance'])
     yelp_markers = [[restaurant['name'], restaurant['lat'], restaurant['lon']] for restaurant in yelp_list]
     num_places = len(yelp_list)
     sum_reviews = sum([restaurant['review_count'] for restaurant in yelp_list])
@@ -28,7 +28,7 @@ def score(address):
     						lum=score_data['lum'],
     						rep_agency=score_data['police_name'],
     						rep_agency_dist=score_data['pol_distance'],
-    						restaurants=score_data['yelp_results'].values(),
+    						restaurants=yelp_list,
     						address_lat=score_data['address']['lat'],
     						address_lng=score_data['address']['lng'],
     						yelp_markers=json.dumps(yelp_markers),

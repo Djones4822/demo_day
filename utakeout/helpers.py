@@ -68,13 +68,14 @@ def get_yelp_results(lat, lon):
         if business['is_closed'] == True:
             continue
         name = business['name']
+        url = business['url']
         review_count = business['review_count']
         rating = business['rating']
         lat = business['location']['coordinate']['latitude']
         lon = business['location']['coordinate']['longitude']
         distance = business['distance']
         deals = business.get('deals',None)
-        ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance}
+        ratings_dict[name] = {'name':name, 'url':url, 'review_count':review_count, 'rating':rating, 'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance}
     #pprint(ratings_dict)
     return ratings_dict, results_json
 

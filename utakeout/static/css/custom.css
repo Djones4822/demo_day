@@ -111,7 +111,6 @@ h3 {
 .takeout-section {
     background-color:#EEEFF7;
     padding-top:50px;
-    padding-bottom:10px:;
 }
 
 .data-section {
@@ -128,6 +127,7 @@ h3 {
 .yelp-section{
     background-color:#fff;
     padding:50px;
+    margin:auto;
 }
 
 .walk-drive {
@@ -254,14 +254,18 @@ td {
     font-size:.9em;
 }
 
+.yelp-img {
+    padding-bottom:25px;
+
+}
+
 .yelp-table {
-    margin:auto;
 }
 
 #map {
     margin:20px auto 20px auto;
     position:relative;
     padding:200px;
-    width:100%;
+    width:75%;
     height:100%;
 }
