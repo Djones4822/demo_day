@@ -270,27 +270,27 @@ def analysis(address):
     return final_result
 
 def grader (z):
-    if   z >= 0 and z <= 59:
+    if   z >= 0 and z < 60:
         return "F"
-    elif z >= 60 and z <= 62:
+    elif z >= 60 and z < 63:
         return "D-"
-    elif z >= 63 and z <= 66:
+    elif z >= 63 and z < 67:
         return "D"
-    elif z >= 67 and z <= 69:
+    elif z >= 67 and z < 70:
         return "D+"
-    elif z >= 70 and z <= 72:
+    elif z >= 70 and z < 73:
         return "C-"
-    elif z >= 73 and z <= 76:
+    elif z >= 73 and z < 77:
         return "C"
-    elif z >= 77 and z <= 79:
+    elif z >= 77 and z < 80:
         return "C+"   
-    elif z >= 80 and z <= 82:
+    elif z >= 80 and z < 83:
         return "B-"
-    elif z >= 83 and z <= 86:
+    elif z >= 83 and z < 87:
         return "B"
-    elif z >= 87 and z <= 89:
+    elif z >= 87 and z < 90:
         return "B+"
-    elif z >= 90 and z <= 92:
+    elif z >= 90 and z < 93:
         return "A-"
     else:
         return "A"
