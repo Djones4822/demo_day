@@ -341,5 +341,3 @@ def grade(factor_dict):
     walk_grade = grade_walk(factor_dict['lum'], factor_dict['avg_walk'], factor_dict['violent_crime_pc'], factor_dict['violent_crime_pc'])
     drive_grade = grade_walk(factor_dict['avg_good_dr'], factor_dict['avg_bad_dr'], factor_dict['violent_crime_pc'], factor_dict['property_crime_pc'])
     return walk_grade, drive_grade
-
-# pprint(analysis('2042 barberrie ln, decatur, ga 30032'))
