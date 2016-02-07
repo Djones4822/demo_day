@@ -28,10 +28,21 @@ def score(address):
     						lum=score_data['lum'],
     						rep_agency=score_data['police_name'],
     						rep_agency_dist=score_data['pol_distance'],
+    						violent_crime_pc=score_data['violent_crime_pc'],
+    						violent_rank=score_data['violent_rank'],
+    						property_crime_pc=score_data['property_crime_pc'],
+    						property_rank=score_data['property_rank'],
     						restaurants=yelp_list,
     						address_lat=score_data['address']['lat'],
     						address_lng=score_data['address']['lng'],
     						yelp_markers=json.dumps(yelp_markers),
     						num_places=num_places,
-    						sum_reviews=sum_reviews
+    						sum_reviews=sum_reviews,
+    						avg_yelp_rating=score_data['avg_yelp_rating'],
+    						avg_walk=score_data['avg_walk'],
+    						avg_good_dr=score_data['avg_good_dr'],
+    						avg_bad_dr=score_data['avg_bad_dr'],
+    						walk_grade=score_data['walk_grade'],
+    						drive_grade=score_data['drive_grade'],
+    						rest_grade=score_data['rest_grade']
     						)

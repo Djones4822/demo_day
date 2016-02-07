@@ -80,7 +80,7 @@
             
             <div class="col-md-8">
                 <div class="above-grade">
-                    <h3 class="text-center">Takeout Grade</h3>
+                    <h3 class="text-center">Takeout Quality</h3>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
                         <dt># Reviewed</dt>
                         <dd>{{ num_places }}</dd>
                         <dt>Avg Rating</dt>
-                        <dd>###</dd>
+                        <dd>{{ avg_yelp_rating }}</dd>
                         <dt>Total Reviews</dt>
                         <dd>{{ sum_reviews }}</dd>
                     </dl>
@@ -108,7 +108,7 @@
 
             <div class="col-md-4">
                 <div class="responsive-circle">
-                    <div class="circle-inner">A-</div>
+                    <div class="circle-inner">{{ rest_grade }}</div>
                 </div>
             </div>
             
@@ -123,9 +123,9 @@
                 <div class="col-md-4">
                     <div class="walk-drive text-center">
                         <div class="grade">
-                            <p>Walking</p>
+                            <p>Walkability</p>
                             <div class="responsive-square">
-                                <div class="square-inner">B</div>
+                                <div class="square-inner">{{ walk_grade }}</div>
                             </div>
                         </div>
                         <div class="line"></div>
@@ -133,7 +133,7 @@
                             <h4>LAND USE MIX</h4>
                             <p>{{ lum }}</p>
                             <h4>AVG TIME TO WALK</h4>            
-                            <p>10 minutes</p>
+                            <p>{{ "{:,.1f}".format(avg_walk/60) }} minutes</p>
                         </div>
                     </div>
                 </div>
@@ -150,9 +150,9 @@
                             <h4>Distance to Agency</h4>
                             <p>{{ "{:,.2f}".format(rep_agency_dist) }} mi.</p>                
                             <h4>Violent Crime</h4>
-                            <p>### p.c</p>
+                            <p>{{ "{:,.1f}".format(violent_crime_pc) }} p.c</p>
                             <h4>Property Crime</h4>            
-                            <p>### p.c</p>
+                            <p>{{ "{:,.1f}".format(property_crime_pc) }} p.c</p>
                         </div>
                     </div>
                 </div>
@@ -185,18 +185,18 @@
                 <div class="col-md-4">
                     <div class="walk-drive text-center">
                         <div class="grade">
-                            <p>Driving</p>
+                            <p>Drivability</p>
                             <div class="responsive-square">
-                                <div class="square-inner">B+</div>
+                                <div class="square-inner">{{ drive_grade }}</div>
                             </div>
                         </div>
                         <div class="line"></div>
                         <div class="data">
                             <h4>AVG TIME TO DRIVE</h4>
-                            <h4>IN BAD TRAFFIC</h4>
-                            <p>13 minutes</p>
                             <h4>IN GOOD TRAFFIC</h4>
-                            <p>7 minutes</p>
+                            <p>{{ "{:,.1f}".format(avg_good_dr/60) }} minutes</p>
+                            <h4>IN BAD TRAFFIC</h4>
+                            <p>{{ "{:,.1f}".format(avg_bad_dr/60) }} minutes</p>
                         </div>
                     </div>
                 </div>        
@@ -237,28 +237,29 @@
                 }
             </script>
         </div>
+        <img src="/static/img/powered_by_google_on_white.png" align="right">
     </div>
 
     <div class="yelp-section">
         <div class="container">
-            <img src="/static/img/yelp-logo.png" class="yelp-img">
             <table class="table table-condensed yelp-table">
                 <tr>
                     <th>Name</th>
                     <th class="text-right">Rating</th>
                     <th class="text-right">Reviews</th>
-                    <th class="text-right">Distance (meters)</th>
+                    <th class="text-right">Distance (mi)</th>
                 </tr>
                 {% for restaurant in restaurants %}
                 <tr>
                     <td><a href="{{ restaurant.url }}">{{ restaurant.name }}</a></td>
                     <td align="right">{{ restaurant.rating }}</td>
                     <td align="right">{{ restaurant.review_count }}</td>
-                    <td align="right">{{ "{:,.1f}".format(restaurant.distance) }}</td>
+                    <td align="right">{{ "{:,.2f}".format(restaurant.distance) }}</td>
                 </tr>
                 {% endfor %}
             </table>
         </div>    
+        <img src="/static/img/yelp-logo.png" class="yelp-img" align="right">
     </div>
         
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
