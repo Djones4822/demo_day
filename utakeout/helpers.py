@@ -252,16 +252,16 @@ def analysis(address):
                     'property_crime_pc':pol_info[4],
                     'property_rank':pol_info[3],
                     'pol_row':pol_info[-1],
-                    'avg_walk':avg_walk,
-                    'avg_good_dr':avg_good_dr,
-                    'avg_bad_dr':avg_bad_dr,
+                    'avg_walk':avg_walk/60,
+                    'avg_good_dr':avg_good_dr/60,
+                    'avg_bad_dr':avg_bad_dr/60,
                     'yelp_results':yelp_dict,
                     'avg_yelp_rating':avg_review
                     }
                     
     walk_grade, drive_grade = grade(final_result)
     
-    # final_result['yelp_results'] = yelp_results
+    #final_result['yelp_results'] = yelp_results
     
     final_result['walk_grade'] = walk_grade
     final_result['drive_grade'] = drive_grade
@@ -270,50 +270,50 @@ def analysis(address):
     return final_result
 
 def grader (z):
-    if   z >= 0 and z < 60:
+    if   z < 60:
         return "F"
-    elif z >= 60 and z < 63:
+    elif 60 <= z < 63:
         return "D-"
-    elif z >= 63 and z < 67:
+    elif 63 <= z < 67:
         return "D"
-    elif z >= 67 and z < 70:
+    elif 67 <= z < 70:
         return "D+"
-    elif z >= 70 and z < 73:
+    elif 70 <= z < 73:
         return "C-"
-    elif z >= 73 and z < 77:
+    elif 73 <= z < 77:
         return "C"
-    elif z >= 77 and z < 80:
+    elif 77 <= z < 80:
         return "C+"   
-    elif z >= 80 and z < 83:
+    elif 80 <= z < 83:
         return "B-"
-    elif z >= 83 and z < 87:
+    elif 83 <= z < 87:
         return "B"
-    elif z >= 87 and z < 90:
+    elif 87 <= z < 90:
         return "B+"
-    elif z >= 90 and z < 93:
+    elif 90 <= z < 93:
         return "A-"
-    else:
+    elif 93 <= z < 97:
         return "A"
+    else:
+        return "A+"
         
         
-def grade_walk(lum, avg_walk_time, violent_crime_rank, property_crime_rank):
+def grade_walk_func(lum, avg_walk_time, violent_crime_rank, property_crime_rank):
     walk_range = {1 : [0, 15], .8 : [15, 30], .6 : [30, 45], .4 : [45, 60], .2 : [60, 99999999]}
     for k,v in walk_range.items():
         if v[0] <= avg_walk_time < v[1]:
             walk_score = k
             break
-    scores = [lum, walk_score, 1 - property_crime_rank, 1 - violent_crime_rank]
-    result = 0
-    for score in scores:
-        result += score*25
-        
+
+    result = (lum*15) + (walk_score*50) + ((1-property_crime_rank)*20) + ((1-violent_crime_rank)*15)    
+    print('Lum: {}, avg_time: {}, violent rank: {}, prop_rank: {}. Result: {}'.format(lum, avg_walk_time,violent_crime_rank,property_crime_rank, result))
     return grader(result)
     
     
-def grade_drive(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime_rank):
+def grade_drive_func(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime_rank):
     drive_variance = avg_bad_dr - avg_good_dr
-    good_ranges = {1 : [0, 7], .8 : [7, 14], .6 : [14, 21], .4 : [21, 30], .2 : [30, 99999999]}
-    bad_ranges = {1 : [0, 15], .8 : [15, 30], .6 : [30, 45], .4 : [45, 60], .2 : [60, 99999999]}
+    good_ranges = {1 : [0, 5], .8 : [5, 10], .6 : [10, 15], .4 : [15, 20], .2 : [25, 99999999]}
+    bad_ranges = {1 : [0, 10], .8 : [10, 20], .6 : [20, 30], .4 : [30, 40], .2 : [40, 99999999]}
     var_ranges = {1 : [0, 5], .8 : [5, 10], .6 : [10, 15], .4 : [15, 20], .2 : [20, 99999999]}
 
     for k,v in good_ranges.items():
@@ -328,16 +328,18 @@ def grade_drive(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime_rank
         if v[0] <= drive_variance < v[1]:
             variance_score = k
             break
-    
-    scores = [good_dr_score, bad_dr_score, variance_score, 1-property_crime_rank, 1-violent_crime_rank]
-    result = 0
-    for score in scores:
-        result += score*20
-        
+
+    result = (good_dr_score*35) + (bad_dr_score*30) + (variance_score*15) + ((1-property_crime_rank)*10) + ((1-violent_crime_rank)*10)
+    print('Good dr: {}, Bad Dr: {}'.format(avg_good_dr, avg_bad_dr))
+    print(result)
     return grader(result)
     
     
 def grade(factor_dict):
-    walk_grade = grade_walk(factor_dict['lum'], factor_dict['avg_walk'], factor_dict['violent_crime_pc'], factor_dict['violent_crime_pc'])
-    drive_grade = grade_walk(factor_dict['avg_good_dr'], factor_dict['avg_bad_dr'], factor_dict['violent_crime_pc'], factor_dict['property_crime_pc'])
+    walk_grade = grade_walk_func(factor_dict['lum'], factor_dict['avg_walk'], factor_dict['violent_rank'], factor_dict['property_rank'])
+    drive_grade = grade_drive_func(factor_dict['avg_good_dr'], factor_dict['avg_bad_dr'], factor_dict['violent_rank'], factor_dict['property_rank'])
     return walk_grade, drive_grade
+
+#pprint(analysis('2042 barberrie ln, decatur, ga 30032'))
+
+# analysis('6 E 39th St, New York, NY 10016')
