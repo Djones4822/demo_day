@@ -89,7 +89,7 @@ aside {
     text-transform: uppercase;
     font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
     font-weight: 700;
-    color: #92CDCF;
+    color: #f05f40;
 }
 
 .navbar-default .navbar-header .navbar-brand:hover,
@@ -128,7 +128,7 @@ aside {
     }
 
     .navbar-default .navbar-header .navbar-brand {
-        color: rgba(146,205,207,.7);
+        color: rgba(240,95,64,.7);
     }
 
     .navbar-default .navbar-header .navbar-brand:hover,
@@ -138,7 +138,7 @@ aside {
 
     .navbar-default .nav > li>a,
     .navbar-default .nav>li>a:focus {
-        color: rgba(146,205,207,.7);
+        color: rgba(240,95,64,.7);
     }
 
     .navbar-default .nav > li>a:hover,
