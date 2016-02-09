@@ -223,7 +223,6 @@ def get_lum(zipcode):
     
 
 def get_box_plot(lst, name, xlab):
-    pyplot.rcParams['font.family'] ='Arial'
     figure = pyplot.figure(1,figsize=(3,2))
     ax = figure.add_subplot(111)
     ax.get_xaxis().tick_bottom()
