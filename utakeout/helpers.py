@@ -5,12 +5,11 @@ import psycopg2
 from time import sleep
 from math import sin, cos, sqrt, atan2, radians, log1p
 from pprint import pprint
-from numpy import median
+from numpy import median, percentile
 import yelpapi
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as pyplot
-import matplotlib.font_manager
 import time
 import os
 
@@ -199,8 +198,10 @@ def get_closest_police(state, lat, lng):
             violent_pc = agency[18]
             property_rank = agency[26]
             property_pc = agency[25]
+            pop_served = agency[7]
+            agency_name = agency[0]
             closest_agency = agency
-            pol_info = [closest_dist, violent_rank, violent_pc, property_rank, property_pc, closest_agency]
+            pol_info = [closest_dist, violent_rank, violent_pc, property_rank, property_pc, agency_name, pop_served, closest_agency]
     return pol_info
 
 
@@ -222,7 +223,8 @@ def get_lum(zipcode):
     return data[0][-1]
     
 
-def get_box_plot(lst, name, xlab):
+def get_box_plot(lst, name):
+    
     figure = pyplot.figure(1,figsize=(3,2))
     ax = figure.add_subplot(111)
     ax.get_xaxis().tick_bottom()
@@ -232,49 +234,83 @@ def get_box_plot(lst, name, xlab):
     ax.spines['top'].set_color('none')
     ax.spines['right'].set_color('none')
     ax.spines['bottom'].set_color('none')
-    ax.set_xlabel(xlab)
-    bp = ax.boxplot(lst, vert=False, patch_artist=True)
+    
+    try:
+        bp = ax.boxplot(lst, vert=False, patch_artist=True)
+    except:
+        return None
+    
+    quart_y = None
     for box in bp['boxes']:
         box.set(color='#445878',linewidth=2)
         box.set(facecolor='#445878')
     for whisker in bp['whiskers']:
         whisker.set(color='#f05f40', linewidth=2)
+    cap_count = 0
     for cap in bp['caps']:
         cap.set(color='#f05f40', linewidth=2)
         x, y = cap.get_xydata()[0]
-        y -= .2
-        ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='center',fontsize='7',color='#969696')
+        quart_y = y - .2
+        y += .02
+        if cap_count == 0:
+            x -= .2
+            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='right', verticalalignment='center', fontsize='7', color='#969696')
+        else:
+            x += .2
+            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='left', verticalalignment='center', fontsize='7', color='#969696')
+        cap_count += 1
     for median in bp['medians']:
         median.set(color='#92CDCF', linewidth=2)
         x, y = median.get_xydata()[1]
         y += .1
         ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='center',fontsize='7',color='#969696')
+    first_q = percentile(lst, 25)
+    third_q = percentile(lst, 75)
+    ax.text(first_q, quart_y, '{:.1f}'.format(first_q), horizontalalignment='center',fontsize='7',color='#969696')
+    ax.text(third_q, quart_y, '{:.1f}'.format(third_q), horizontalalignment='center',fontsize='7',color='#969696')
+
     timestamp = str(time.time()).replace('.','')
     filename = '{}{}.png'.format(name,timestamp)
     figure.savefig(os.path.join('utakeout','static','img','plot',filename), bbox_inches='tight')
     figure.clear()
     return filename
     
-
+    
 def analysis(address):
     address_dict = get_address_info(address)
+    if address_dict is None:
+        return 'The address you gave could not be located! We\'re sorry!\nYou entered {}'.format(address)
     yelp_dict, yelp_results = get_yelp_results(address_dict['lat'],address_dict['lng'])
+    if not yelp_dict:
+        return 'Something went wrong! Please try again or contact the administrator!'
     walk_link, bad_drive_link, good_drive_link = get_distances_link(address_dict['lat'], 
                                                                     address_dict['lng'],
                                                                     yelp_dict)
+    if any(not x for x in [walk_link, bad_drive_link, good_drive_link]):
+        return 'Something went wrong! Please try again or contact the administrator!'
+    
+    #Get distance list    
     walk_distance = get_business_distances(walk_link)
     good_drive_dist = get_business_distances(good_drive_link)
     bad_drive_dist = get_business_distances(bad_drive_link)
-    walk_img = get_box_plot(walk_distance, str(address_dict['postal_code']),'Walking Minutes')
-    gd_img = get_box_plot(good_drive_dist, str(address_dict['postal_code']), 'Good Driving Minutes')
-    bd_img = get_box_plot(bad_drive_dist, str(address_dict['postal_code']), 'Bad Driving Minutes')
+    if any(not x for x in [walk_distance, good_drive_dist, bad_drive_dist]):
+        return 'Something went wrong! Please try again or contact the administrator!'
     
+    #Get Box Plots    
+    walk_img = get_box_plot(walk_distance, str(address_dict['postal_code']))
+    gd_img = get_box_plot(good_drive_dist, str(address_dict['postal_code']))
+    bd_img = get_box_plot(bad_drive_dist, str(address_dict['postal_code']))
+    if any((not x) for x in [bd_img, gd_img, walk_img]):
+        return 'Something went wrong! Please try again or contact the administrator!'
+        
     pol_info = get_closest_police(str(address_dict['state']), 
                                       address_dict['lat'], 
                                       address_dict['lng'])
 
     lum = get_lum(address_dict['postal_code'])
-
+    if not pol_info or not lum:
+        return 'Something went wrong! Please try again or contact the administrator!'
+        
     #############
     #Get avg yelp review grade
     ratings = [(business_dict['rating'],business_dict['review_count'], 
@@ -315,8 +351,9 @@ def analysis(address):
                     'median_walk': median_walk,
                     'median_bad': median_bad,
                     'median_good': median_good,
-                    'police_name':pol_info[-1][0],
+                    'police_name':pol_info[5],
                     'pol_distance':pol_info[0],
+                    'pop_served':pol_info[6],
                     'violent_crime_pc':pol_info[2],
                     'violent_rank':pol_info[1],
                     'property_crime_pc':pol_info[4],
@@ -334,13 +371,23 @@ def analysis(address):
                     
     walk_grade, drive_grade = grade(final_result)
     
-    #final_result['yelp_results'] = yelp_results
-    
+
     final_result['walk_grade'] = walk_grade
     final_result['drive_grade'] = drive_grade
     final_result['rest_grade'] = rest_grade
 
     return final_result
+
+def nth(percentile):
+    last_digit = percentile[-1]
+    if percentile in ['11','12','13','14','15','16','17','18','19']:
+        return '{}th'.format(percentile)
+    elif last_digit in ['0','4','5','6','7','8','9']:
+        return '{}th'.format(percentile)
+    elif last_digit == '2':
+        return '{}nd'.format(percentile)
+    else:
+        return '{}rd'.format(percentile)
 
 def grader (z):
     if   z < 60:
@@ -379,7 +426,7 @@ def grade_walk_func(lum, avg_walk_time, violent_crime_rank, property_crime_rank)
             break
 
     result = (lum*15) + (walk_score*50) + ((1-property_crime_rank)*20) + ((1-violent_crime_rank)*15)    
-    #print('Lum: {}, avg_time: {}, violent rank: {}, prop_rank: {}. Result: {}'.format(lum, avg_walk_time,violent_crime_rank,property_crime_rank, result))
+    print('Lum: {}, avg_time: {}, violent rank: {}, prop_rank: {}. Result: {}'.format(lum, avg_walk_time,violent_crime_rank,property_crime_rank, result))
     return grader(result)
     
     
@@ -403,8 +450,8 @@ def grade_drive_func(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime
             break
 
     result = (good_dr_score*35) + (bad_dr_score*30) + (variance_score*15) + ((1-property_crime_rank)*10) + ((1-violent_crime_rank)*10)
-    #print('Good dr: {}, Bad Dr: {}'.format(avg_good_dr, avg_bad_dr))
-    #print(result)
+    print('Good dr: {}, Bad Dr: {}'.format(avg_good_dr, avg_bad_dr))
+    print(result)
     return grader(result)
     
     

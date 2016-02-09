@@ -131,7 +131,7 @@
                         <div class="line"></div>
                         <div class="data">
                             <h4>LAND USE MIX</h4>
-                            <p>{{ lum }}</p>
+                            <p>{{ lum*100 }}% mixed</p>
                             <h4>WALKING TIME (min)</h4>            
                             <p>{{ "{:,.1f}".format(avg_walk) }} (avg)</p>
                         </div>
@@ -154,10 +154,14 @@
                             <p>{{ rep_agency }}</p>
                             <h4>Distance to Agency</h4>
                             <p>{{ "{:,.2f}".format(rep_agency_dist) }} mi.</p>                
+                            <h4>Population Served</h4>
+                            <p>{{ "{:,}".format(pop_served) }}</p>                
                             <h4>Violent Crime</h4>
-                            <p>{{ "{:,.1f}".format(violent_crime_pc) }} p.c</p>
+                            <p>{{ "{:,.1f}".format(violent_crime_pc) }} per 100k</p>
+                            <p>{{ "{}".format(violent_rank) }} percentile</p>
                             <h4>Property Crime</h4>            
-                            <p>{{ "{:,.1f}".format(property_crime_pc) }} p.c</p>
+                            <p>{{ "{:,.1f}".format(property_crime_pc) }} per 100k</p>
+                            <p>{{ "{}".format(property_rank) }} percentile</p>
                         </div>
                     </div>
                 </div>
