@@ -132,9 +132,14 @@
                         <div class="data">
                             <h4>LAND USE MIX</h4>
                             <p>{{ lum }}</p>
-                            <h4>AVG TIME TO WALK</h4>            
-                            <p>{{ "{:,.1f}".format(avg_walk/60) }} minutes</p>
+                            <h4>WALKING TIME (min)</h4>            
+                            <p>{{ "{:,.1f}".format(avg_walk) }} (avg)</p>
                         </div>
+
+                        <div class="boxplot">
+                            <img src="{{ url_for('static', filename='img/plot/' + walk_img) }}">
+                        </div>
+                        
                     </div>
                 </div>
                
@@ -192,11 +197,17 @@
                         </div>
                         <div class="line"></div>
                         <div class="data">
-                            <h4>AVG TIME TO DRIVE</h4>
+                            <h4>DRIVING TIME (min)</h4>
                             <h4>IN GOOD TRAFFIC</h4>
-                            <p>{{ "{:,.1f}".format(avg_good_dr) }} minutes</p>
+                            <p>{{ "{:,.1f}".format(avg_good_dr) }} (avg)</p>
+                            <div class="boxplot">
+                            <img src="{{ url_for('static', filename='img/plot/' + gd_img) }}">
+                            </div>
                             <h4>IN BAD TRAFFIC</h4>
-                            <p>{{ "{:,.1f}".format(avg_bad_dr) }} minutes</p>
+                            <p>{{ "{:,.1f}".format(avg_bad_dr) }} (avg)</p>
+                            <div class="boxplot">
+                            <img src="{{ url_for('static', filename='img/plot/' + bd_img) }}">
+                            </div>
                         </div>
                     </div>
                 </div>        

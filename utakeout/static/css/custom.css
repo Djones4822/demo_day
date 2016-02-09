@@ -134,7 +134,7 @@ h3 {
     display:block;
     position:relative;
     max-width:400px;
-    height:440px;
+    height:600px; /* used to be 440px */ 
     margin:auto auto 15px;
     right:0;
     padding:10px;
@@ -142,6 +142,7 @@ h3 {
     border-style:solid;
     border-color:#eee;
     border-width:.5px;
+    overflow:visible;
 }
 
 .grade {
@@ -182,6 +183,7 @@ h3 {
     margin:0 auto;
     background-color:#fff;
     text-align:center;
+    overflow: visible
 }
 
 .data p {
@@ -190,6 +192,7 @@ h3 {
     color: #969696;
     font-weight:;
     font-size:.9em;
+    margin-bottom:0;
 }
 
 .data h4 {
@@ -198,7 +201,15 @@ h3 {
     font-weight: 600;
     font-size:1em;
     color: #;
+}
 
+.boxplot {
+    overflow:hidden;
+}
+
+.boxplot img{
+    margin-top:-40px;
+    margin-bottom:-50px;
 }
 
 .crime {

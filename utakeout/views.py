@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from utakeout import app
 from helpers import analysis
 import json
+import os
 # from forms import AddressForm
 
 
@@ -19,6 +20,9 @@ def score(address):
     yelp_markers = [[restaurant['name'], restaurant['lat'], restaurant['lon']] for restaurant in yelp_list]
     num_places = len(yelp_list)
     sum_reviews = sum([restaurant['review_count'] for restaurant in yelp_list])
+    walk_img_path = '/static/img/plot/' + score_data['walk_img']
+    gd_img_path = '/static/img/plot/' + score_data['gd_img']
+    bd_img_path = '/static/img/plot/' + score_data['bd_img']
     return render_template('score.html',
     						number=score_data['address']['street_number'],
     						street=score_data['address']['route'],
@@ -44,5 +48,8 @@ def score(address):
     						avg_bad_dr=score_data['avg_bad_dr'],
     						walk_grade=score_data['walk_grade'],
     						drive_grade=score_data['drive_grade'],
-    						rest_grade=score_data['rest_grade']
+    						rest_grade=score_data['rest_grade'],
+    						walk_img=score_data['walk_img'],
+    						gd_img=score_data['gd_img'],
+    						bd_img=score_data['bd_img']
     						)
