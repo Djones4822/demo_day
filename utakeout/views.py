@@ -10,8 +10,11 @@ import os
 def index():
     if request.method == 'POST':
         address = request.form['address']
+        result = analysis(address)
+        if isinstance(result,str):
+        	return render_template('index.html',message=result)
         return redirect(url_for('score', address=address))
-    return render_template('index.html')
+    return render_template('index.html',message='')
 
 @app.route('/score/<address>')
 def score(address):
@@ -43,6 +46,7 @@ def score(address):
     						num_places=num_places,
     						sum_reviews=sum_reviews,
     						avg_yelp_rating=score_data['avg_yelp_rating'],
+    						num_walkable=score_data['num_walkable'],
     						avg_walk=score_data['avg_walk'],
     						avg_good_dr=score_data['avg_good_dr'],
     						avg_bad_dr=score_data['avg_bad_dr'],
@@ -54,3 +58,6 @@ def score(address):
     						bd_img=score_data['bd_img']
     						)
 
+@app.route('/about')
+def about():
+	return render_template('about.html')

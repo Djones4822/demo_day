@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>uTakeout</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="/static/css/animate.min.css" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="/static/css/creative.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+   
+     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top">
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="{{ url_for('index') }}">uTakeout</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <div class="about-section">
+        <div class="container">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="about">
+                    <h2 class="text-center">What is uTakeout?</h2>
+                    <p>uTakeout is an app built with Python that uses APIs from Google and Yelp along with public crime data from the FBI and a statistic known as “Land Use Mix” to build an estimate for how good and accessible the takeout is around you.</p>
+
+                    <p>We believe that the quality of takeout at any given location is affected by 3 main factors--how good the food is, how hard it is to get there, and how safe your journey is. What we try to do is rate the relevant factors in a way that gives an accurate representation of how you would feel being asked to either walk or drive to get takeout. We’re still tweaking the estimates, so don’t be too hard on us!</p> 
+
+                    <p>With this in mind, we’ve chosen to not factor in whether or not places deliver. Delivery is more solely dependent on just the quality of food, which isn’t really interesting to us.</p>
+
+                    <p>So right now, you may be asking yourself: “wtf is land use mix?” Well, Land Use Mix (or LUM) is a 0-1 scale that measures the “heterogeneity” of land uses in a given area (in this case zipcode). For example, an area with equal mixes of residential, commercial, and industrial land use would be scored a 1 while an area that is entire residential would be scored a 0 (see below for the distribution of LUM in the US). We chose to use this because according to health research<sup>1,2,3</sup>, land use mix is positively correlated with the presence of sidewalks and an increased “walkability”. Basically, it’s our best guess as to whether or not you’re walking on a main road with no sidewalks or in a nice area away from dangerous cars. We know it’s not perfect, and unfortunately we’re stuck at the zip-code level, but we’ll be improving it soon!</p>
+                </div>
+
+                    <div class="lum">
+                        <img src="/static/img/lum.png" align="center">
+                    </div>
+                    
+                <div class="about"> 
+                    <p>Last, you may be asking “what data do you collect from me?” The answer is: NONE. We use your address to talk to Google and Yelp, but once we do that we never see your address again. Furthermore, none of your data is saved even from our processing standpoint. Once it hits your screen, we never see it again - you have our word!</p>
+                </div>    
+                    <hr>
+
+                <div class="sources">
+                    <p><a href="http://www.epa.gov/mrlc/nlcd-2001.html">Data Source: 2001 National Land Cover Data (NLCD), produced by the EPA</a></p>
+                    <p><a href="https://geodacenter.asu.edu/%5Btermalias-raw%5D/land-use-mix-0">Downloaded Here</a></p>
+
+                    <ol>
+                        <li>Brown, B. B., Yamada, I., Smith, K. R., Zick, C. D., Kowaleski-Jones, L., &amp; Fan, J. X. (2009). Mixed land use and walkability: Variations in land use measures and relationships with BMI, overweight, and obesity. Health &amp; Place, 15(4), 1130-1141.</li>
+                        <li>Christian, H. E., Bull, F. C., Middleton, N. J., Knuiman, M. W., Divitini, M. L., Hooper, P., ... & Giles-Corti, B. (2011). How important is the land use mix measure in understanding walking behaviour? Results from the RESIDE study. Int J Behav Nutr Phys Act, 8(55), 10-1186.</li>
+                        <li>Kockelman, Kara. "Travel behavior as function of accessibility, land use mixing, and land use balance: evidence from San Francisco Bay Area."Transportation Research Record: Journal of the Transportation Research Board 1607 (1997): 116-125.</li>
+                    </ol>
+                </div>
+                
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    
+</body>
+</html>

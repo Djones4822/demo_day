@@ -27,8 +27,6 @@ DBHOST='ec2-54-225-197-143.compute-1.amazonaws.com'
 DBPW ='50qIXvnDz100e54cqAoV6lpEpg'
 R = 6373.0 # approximate radius of earth in km
 
-class Process_Fail(Exception):
-    pass
 
 def get_geolocate_link(input_address):
     """Generates Google Maps Geocoding API request url from address"""
@@ -83,7 +81,8 @@ def get_yelp_results(lat, lon):
     """
     yelp_api = yelpapi.YelpAPI(YELP_CONSUMER_KEY, YELP_CONSUMER_SECRET, YELP_TOKEN, YELP_TOKEN_SECRET)
     results_json1 = yelp_api.search_query(sort=1, term='takeout', ll='{},{}'.format(lat,lon))
-    results_json2 = yelp_api.search_query(sort=1, offset=20, limit=20, term='takeout', ll='{},{}'.format(lat,lon))
+    results_json2 = yelp_api.search_query(sort=1, offset=20, limit=20, 
+                                          term='takeout', ll='{},{}'.format(lat,lon))
     results_json = results_json1['businesses'] + results_json2['businesses']
     
     ratings_dict = {}
@@ -98,7 +97,8 @@ def get_yelp_results(lat, lon):
         lon = business['location']['coordinate']['longitude']
         distance = business['distance']*0.000621371 # meters to miles conversion
         deals = business.get('deals',None)
-        ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance}
+        ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 
+                            'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance, 'url':url}
     #pprint(ratings_dict)
     return ratings_dict, results_json
         
@@ -108,7 +108,8 @@ def get_distances_link(lat, lon, ratings_dict):
     search_string= '|'.join(['{},{}'.format(business['lat'], business['lon']) 
                         for business in ratings_dict.values()])
     walk_link = GOOGLE_DISTANCE_API.format(home,search_string,'walking',GOOGLE_API_KEY)
-    bad_drive_link = GOOGLE_DISTANCE_API.format(home,search_string,'driving',GOOGLE_API_KEY) + '&departure_time={}&traffic_model=pessimistic'.format(get_next_weekday_6pm())
+    bad_drive_link = GOOGLE_DISTANCE_API.format(home,search_string,'driving',GOOGLE_API_KEY) + \
+                    '&departure_time={}&traffic_model=pessimistic'.format(get_next_weekday_6pm())
     good_drive_link = GOOGLE_DISTANCE_API.format(home,search_string,'driving',GOOGLE_API_KEY)
     return walk_link, bad_drive_link, good_drive_link
 
@@ -201,7 +202,8 @@ def get_closest_police(state, lat, lng):
             pop_served = agency[7]
             agency_name = agency[0]
             closest_agency = agency
-            pol_info = [closest_dist, violent_rank, violent_pc, property_rank, property_pc, agency_name, pop_served, closest_agency]
+            pol_info = [closest_dist, violent_rank, violent_pc, property_rank, 
+                        property_pc, agency_name, pop_served, closest_agency]
     return pol_info
 
 
@@ -220,8 +222,9 @@ def get_lum(zipcode):
     data = cursor.fetchall()
     cursor.close()
     conn.close()
-    return data[0][-1]
-    
+    if data:
+        return data[0][-1]
+    return None
 
 def get_box_plot(lst, name):
     
@@ -254,10 +257,12 @@ def get_box_plot(lst, name):
         y += .02
         if cap_count == 0:
             x -= .2
-            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='right', verticalalignment='center', fontsize='7', color='#969696')
+            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='right', 
+                    verticalalignment='center', fontsize='7', color='#969696')
         else:
             x += .2
-            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='left', verticalalignment='center', fontsize='7', color='#969696')
+            ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='left', 
+                    verticalalignment='center', fontsize='7', color='#969696')
         cap_count += 1
     for median in bp['medians']:
         median.set(color='#92CDCF', linewidth=2)
@@ -266,12 +271,14 @@ def get_box_plot(lst, name):
         ax.text(x, y, '{:.1f}'.format(x), horizontalalignment='center',fontsize='7',color='#969696')
     first_q = percentile(lst, 25)
     third_q = percentile(lst, 75)
-    ax.text(first_q, quart_y, '{:.1f}'.format(first_q), horizontalalignment='center',fontsize='7',color='#969696')
-    ax.text(third_q, quart_y, '{:.1f}'.format(third_q), horizontalalignment='center',fontsize='7',color='#969696')
+    ax.text(first_q, quart_y, '{:.1f}'.format(first_q), horizontalalignment='center',
+            fontsize='7',color='#969696')
+    ax.text(third_q, quart_y, '{:.1f}'.format(third_q), horizontalalignment='center',
+            fontsize='7',color='#969696')
 
     timestamp = str(time.time()).replace('.','')
     filename = '{}{}.png'.format(name,timestamp)
-    figure.savefig(os.path.join('utakeout','static','img','plot',filename), bbox_inches='tight')
+    #figure.savefig(os.path.join('utakeout','static','img','plot',filename), bbox_inches='tight')
     figure.clear()
     return filename
     
@@ -300,39 +307,28 @@ def analysis(address):
     walk_img = get_box_plot(walk_distance, str(address_dict['postal_code']))
     gd_img = get_box_plot(good_drive_dist, str(address_dict['postal_code']))
     bd_img = get_box_plot(bad_drive_dist, str(address_dict['postal_code']))
+    
     if any((not x) for x in [bd_img, gd_img, walk_img]):
         return 'Something went wrong! Please try again or contact the administrator!'
         
     pol_info = get_closest_police(str(address_dict['state']), 
                                       address_dict['lat'], 
                                       address_dict['lng'])
-
     lum = get_lum(address_dict['postal_code'])
+    
     if not pol_info or not lum:
         return 'Something went wrong! Please try again or contact the administrator!'
         
-    #############
-    #Get avg yelp review grade
     ratings = [(business_dict['rating'],business_dict['review_count'], 
                                         business_dict['distance']) for 
                                         business_dict in yelp_dict.values() 
                                         if business_dict['rating']]
 
-    total_rev = 0.0
-    weighted_score = 0.0
+    total_rev = sum([x[1] for x in ratings])
     avg_review = sum([rating[0] for rating in ratings])/len(ratings)
     median_review = median([rating[0] for rating in ratings])
-    
-    for bus in ratings:
-        total_rev += log1p(bus[1])
-    #calc distance weight
-    for bus in ratings:
-        weight = log1p(bus[1]) / total_rev
-        weighted_score += weight * bus[0]
-        
-    weighted_score = weighted_score/len(ratings)
-    rest_grade = grader(((avg_review)/5)*100)
-    #############
+    bus_dists = [bus[2] for bus in ratings]
+    num_walkable = len([x for x in bus_dists if x <=1])
     
     avg_walk = sum(walk_distance)/len(walk_distance)
     median_walk = median(walk_distance)
@@ -344,7 +340,6 @@ def analysis(address):
     final_result = {
                     'address':address_dict,
                     'average_review': avg_review,
-                    'weighted_review':weighted_score,
                     'median_review': median_review,
                     'total_reviews':total_rev,
                     'lum':lum,
@@ -358,7 +353,6 @@ def analysis(address):
                     'violent_rank':pol_info[1],
                     'property_crime_pc':pol_info[4],
                     'property_rank':pol_info[3],
-                    'pol_row':pol_info[-1],
                     'avg_walk':avg_walk,
                     'avg_good_dr':avg_good_dr,
                     'avg_bad_dr':avg_bad_dr,
@@ -366,12 +360,12 @@ def analysis(address):
                     'avg_yelp_rating':avg_review,
                     'gd_img':gd_img,
                     'bd_img':bd_img,
-                    'walk_img':walk_img
+                    'walk_img':walk_img,
+                    'num_walkable':num_walkable
                     }
                     
     walk_grade, drive_grade = grade(final_result)
-    
-
+    rest_grade = grader(((avg_review)/5)*100)
     final_result['walk_grade'] = walk_grade
     final_result['drive_grade'] = drive_grade
     final_result['rest_grade'] = rest_grade
@@ -418,15 +412,16 @@ def grader (z):
         return "A+"
         
         
-def grade_walk_func(lum, avg_walk_time, violent_crime_rank, property_crime_rank):
+def grade_walk_func(num_walkable, lum, avg_walk_time, violent_crime_rank, property_crime_rank):
     walk_range = {1 : [0, 15], .8 : [15, 30], .6 : [30, 45], .4 : [45, 60], .2 : [60, 99999999]}
     for k,v in walk_range.items():
         if v[0] <= avg_walk_time < v[1]:
             walk_score = k
             break
-
-    result = (lum*15) + (walk_score*50) + ((1-property_crime_rank)*20) + ((1-violent_crime_rank)*15)    
-    print('Lum: {}, avg_time: {}, violent rank: {}, prop_rank: {}. Result: {}'.format(lum, avg_walk_time,violent_crime_rank,property_crime_rank, result))
+    walkable_score = 1 if num_walkable >= 15 else num_walkable/15.0
+    
+    result = (lum*15) + (walkable_score*30) + (walk_score*30) + ((1-property_crime_rank)*15) + \
+             ((1-violent_crime_rank)*10)    
     return grader(result)
     
     
@@ -449,18 +444,23 @@ def grade_drive_func(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime
             variance_score = k
             break
 
-    result = (good_dr_score*35) + (bad_dr_score*30) + (variance_score*15) + ((1-property_crime_rank)*10) + ((1-violent_crime_rank)*10)
-    print('Good dr: {}, Bad Dr: {}'.format(avg_good_dr, avg_bad_dr))
-    print(result)
+    result = (good_dr_score*35) + (bad_dr_score*30) + (variance_score*15) + \
+              ((1-property_crime_rank)*10) + ((1-violent_crime_rank)*10)
+
     return grader(result)
     
     
 def grade(factor_dict):
-    walk_grade = grade_walk_func(factor_dict['lum'], factor_dict['avg_walk'], factor_dict['violent_rank'], factor_dict['property_rank'])
-    drive_grade = grade_drive_func(factor_dict['avg_good_dr'], factor_dict['avg_bad_dr'], factor_dict['violent_rank'], factor_dict['property_rank'])
+    walk_grade = grade_walk_func(factor_dict['num_walkable'], factor_dict['lum'], 
+                                factor_dict['avg_walk'], factor_dict['violent_rank'], 
+                                factor_dict['property_rank'])
+    drive_grade = grade_drive_func(factor_dict['avg_good_dr'], factor_dict['avg_bad_dr'], 
+                                   factor_dict['violent_rank'], factor_dict['property_rank'])
     return walk_grade, drive_grade
     
 
 #pprint(analysis('2042 barberrie ln, decatur, ga 30032'))
 
-analysis('6 E 39th St, New York, NY 10016')
+#analysis('6 E 39th St, New York, NY 10016')
+
+pprint(analysis('500th ave 1000'))
