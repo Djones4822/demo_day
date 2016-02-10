@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from utakeout import app
-from helpers import analysis, nth
+from analysis import analysis
+from helper_functions import nth
 import json
 import os
 # from forms import AddressForm

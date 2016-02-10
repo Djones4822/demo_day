@@ -173,7 +173,7 @@
                 <div class="col-md-4">
                     <div class="walk-drive text-center">
                         <div class="grade">
-                            <p>Drivability</p>
+                            <p>Driveability</p>
                             <div class="responsive-square">
                                 <div class="square-inner">{{ drive_grade }}</div>
                             </div>
@@ -231,31 +231,38 @@
                 }
             </script>
         </div>
-        <img src="/static/img/powered_by_google_on_white.png" align="right">
+
+        <img src="/static/img/powered_by_google_on_white.png" style="display: block;margin: auto;">
+
+        </div>
     </div>
 
     <div class="yelp-section">
         <div class="container">
-            <table class="table table-condensed yelp-table">
-                <tr>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th class="text-right">Rating</th>
-                    <th class="text-right">Reviews</th>
-                    <th class="text-right">Distance (mi)</th>
-                </tr>
-                {% for restaurant in restaurants %}
-                <tr>
-                    <td><a href="{{ restaurant.url }}">{{ restaurant.name }}</a></td>
-                    <td>{{ restaurant.categories }}</td>
-                    <td align="right">{{ restaurant.rating }}</td>
-                    <td align="right">{{ restaurant.review_count }}</td>
-                    <td align="right">{{ "{:,.2f}".format(restaurant.distance) }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+            <div class="col-md-12">
+                <div class="yelp-table">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>Name</th>
+                            <th nowrap>Category</th>
+                            <th class="text-right">Rating</th>
+                            <th class="text-right">Reviews</th>
+                            <th class="text-right">Distance (mi)</th>
+                        </tr>
+                        {% for restaurant in restaurants %}
+                        <tr>
+                            <td><a href="{{ restaurant.url }}">{{ restaurant.name }}</a></td>
+                            <td>{{ restaurant.categories }}</td>
+                            <td align="right">{{ restaurant.rating }}</td>
+                            <td align="right">{{ restaurant.review_count }}</td>
+                            <td align="right">{{ "{:,.2f}".format(restaurant.distance) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>    
-        <img src="/static/img/yelp-logo.png" class="yelp-img" align="right">
+        <img src="/static/img/yelp-logo.png" class="yelp-img" style="display: block;margin: auto;">
     </div>
         
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>

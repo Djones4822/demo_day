@@ -2,52 +2,43 @@
 uTakeout  
 
 ## General
-For some, the most important factor about any given location is the food. uTakeout helps you 
+When we think about the Quality of nearby takeout, often what comes to mind is the quality of Food. However, when faced with the prospect of walking or driving, different considerations must be made, such as the safety of the area, accessibility of the area, or the travel time to a given restuarant. uTakeout seeks to bridge these factors and provide a comprehensive review of the quality and accessibility of takeout around a given address.
 
-## How To Use SteamScout
-1. Sign up to make an account
-2. Use the link sent to your email to validate your account
-3. Search for games
-4. Set a scout to email you when a game drops down to a price you set
-5. SteamScout will email you automatically if any of your games hit your preferences.
+## How uTakeout Works
+1. The user enters their address on the home page and presses "Go"
+2. The address is geocoded into a lat/lon through the Google Geocode API 
+3. The lat/lon is then used to query Yelp for the nearest 40 restaurants and relevent information is extracted from each
+4. The travel distance from the given address is then calculated against each restaurant 3 times - once for walking, once for driving in no traffic, and once for driving in heavy traffic (Monday at 6:00pm). 
+5. The home location is then matched to the nearest police agency (straight line distance) that reports crime statistics to the FBI and those statistics are extracted
+6. The home location is then matched to a "Land Use Mix" statistic based on zip-code
+7. All statistics gathered are then analyzed and combined into 3 letter grades that range from F to A+ that provide comprehensive reviews of all factors as they relate to food quality, walkability, and driveability.
+8. The user is then presented with all gathered information along with a map of the restaurants and links to their yelp pages. 
 
-- You can update/delete your set price scouts at any time.
-
-Below will be transferred over to GH issues.
+-No data is stored from the user or any API calls
 
 ### Optional Future Features
 
-+ Paginate games library, currently causes significant lag. SQL alchemy has something built in for pagination
-+ Make it mobile friendly, add media queries
-+ Improve Settings page. - Improved it to look better.
-+ Add percentage threshold option for preferences
-+ Color divs in preferences so that users can see how close their set price is to the current price.
-+ Implement Flask blueprints
-+ validate each integer in the amount threshold form
-+ make the individual games look pretty - Improved it, but it could be better..
-+ Change generic variables to be more specific. Ex. form should should be login_form
-+ Add to the settings page when no preferences are set.
-+ Add a default currency on games page
-+ Add button/link to the settings page which link to game search ''Add New Scout''
++ Add Walk and Drive time histograms 
++ Change Crime Statistics to Robbery, Larceny and Auto Theft
++ Implement dynamic weighting that redistributes the factor weight according to how far away the police agency is
++ Change layout to 1-2-1-map (now it’s 1-3-map)
++ Build JS popup box that explains the LUM and Box Plots 
++ Map travel distances to restaurants (refactor distance collection process)
++ Improve restaurant grading
++ Implement Overall grade
++ Add "methodology" page that gives descriptions for each factor and describes scoring system
 
 ### Completed:
-+ see if theres a way to include game cover art, trailers, etc in the individual game page
-+ Change Preferences so that once an email goes out with that preference,
-either delete the preference or mark it so that it doesn't get sent out again in the next report.
-+ Convert game games to links to games steam store page. (available in the API)
-+ User must be authenticated before saving games.
-+ Set up email notifications and integrate with some type of scheduling system.
-+ set up the gamesDB to automatically refresh every 24 hours. - Cron Job
-+ 404 screen is broken. Image not loading.
-- Flashes
-- configure a way for steamscout to email users. - Flask-Mail
-- Update button in user's settings page.
-- set up user preferences
-- Set up email account validations
-- format price data. Currently "$4.99" displays as "499" - changed format_prices to make it easier
-- Ideally, figure a way to only put games into the gamesDB.
-    - if not 2, protect the site from apps that dont have a price_info section.
-- build way to search through games library - Basic Functionality
-- Changes amount format, list view on settings
-- Improve Navbar in base (log out column adding problems)
-- Split components into separate files. App.py is too big for one file.
++ Convert given address into lat/lon
++ Gather yelp restuarants
++ Gather travel times for walking/driving_good/driving_bad
++ Build database for housing crime and LUM statistics
++ Communicate with database for crime and lum
++ Create boxplot using matlibplot to display travel information succinctly 
++ Build grading formula for factor analysis
++ Convert grades into 0-100 scale and subsequent letter grades
++ Show map of all restaurants in relation to home
++ Display restaurant info in table
++ Add button-disable to prevent multiple form submissions
++ Error catch invalid addresses and prevent subsequent API calls
++ Add "About" page that gives more detail and explains what the website is

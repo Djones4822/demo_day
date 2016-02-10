@@ -6,6 +6,8 @@
 /.vs
 *.suo
 /data
+DEPRECATED_backend.py
+helpers.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

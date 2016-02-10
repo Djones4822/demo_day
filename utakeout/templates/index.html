@@ -75,7 +75,7 @@
                     <div class="col-xs-4">    
                         <form class="form" role="form" action="" method="POST" onsubmit="gobutton.disabled = true">
                             <div class="form-group">
-                                <input name="address" class="form-control" placeholder="Address">
+                                <input name="address" class="form-control" placeholder="Address" required>
                                 <div style="padding:20px;">
                                     <button type="submit" name="gobutton" class="btn btn-primary btn-xl">Go!</button>
                                 </div>
@@ -85,7 +85,7 @@
                         
                     <div class="col-xs-4"></div>
                 </div>
-                <p>{{ message }}</p>
+                <p style="text-transform:uppercase;color:#D10000;font-weight:700">{{ message }}</p>
             </div>
         </div>
     </header>
