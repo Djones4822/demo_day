@@ -321,6 +321,9 @@ td {
     line-height:180%;
 }
 
+.contact {
+    padding-top:50%;
+}
 .sources p {
     text-transform:;  
     font-family: Merriweather,'Open Sans','Helvetica Neue',Arial,sans-serif;
@@ -344,6 +347,6 @@ td {
     margin:20px auto 20px auto;
     position:relative;
     padding:200px;
-    width:75%;
+    width:50%;
     height:100%;
 }

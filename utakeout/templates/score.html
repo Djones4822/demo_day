@@ -53,13 +53,7 @@
                         <a class="page-scroll" href="{{ url_for('about') }}">About</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Services</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
+                        <a class="page-scroll" href="{{ url_for('contact') }}">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -80,7 +74,7 @@
             
             <div class="col-md-8">
                 <div class="above-grade">
-                    <h3 class="text-center">Takeout Quality</h3>
+                    <h3 class="text-center">Food Quality</h3>
                 </div>
             </div>
 
@@ -245,6 +239,7 @@
             <table class="table table-condensed yelp-table">
                 <tr>
                     <th>Name</th>
+                    <th>Category</th>
                     <th class="text-right">Rating</th>
                     <th class="text-right">Reviews</th>
                     <th class="text-right">Distance (mi)</th>
@@ -252,6 +247,7 @@
                 {% for restaurant in restaurants %}
                 <tr>
                     <td><a href="{{ restaurant.url }}">{{ restaurant.name }}</a></td>
+                    <td>{{ restaurant.categories }}</td>
                     <td align="right">{{ restaurant.rating }}</td>
                     <td align="right">{{ restaurant.review_count }}</td>
                     <td align="right">{{ "{:,.2f}".format(restaurant.distance) }}</td>

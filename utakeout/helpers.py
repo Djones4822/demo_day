@@ -27,7 +27,9 @@ DBHOST='ec2-54-225-197-143.compute-1.amazonaws.com'
 DBPW ='50qIXvnDz100e54cqAoV6lpEpg'
 R = 6373.0 # approximate radius of earth in km
 
-
+#class Process_fail(Exception):
+    #return 'Something went wrong! Please make sure you\'ve entered a valid US address and try again, or contact the administrator!'
+    
 def get_geolocate_link(input_address):
     """Generates Google Maps Geocoding API request url from address"""
     new_address = input_address.replace(' ','+')
@@ -97,13 +99,36 @@ def get_yelp_results(lat, lon):
         lon = business['location']['coordinate']['longitude']
         distance = business['distance']*0.000621371 # meters to miles conversion
         deals = business.get('deals',None)
+        categories = business.get('categories', None)
+        if categories is not None:
+            return_cat = ', '.join([cat[0] for cat in categories])
         ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 
-                            'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance, 'url':url}
-    #pprint(ratings_dict)
+                            'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance, 'url':url,
+                            'categories':return_cat}
+    pprint(ratings_dict)
     return ratings_dict, results_json
         
 
 def get_distances_link(lat, lon, ratings_dict):
+    """Constructs 3 Google Distance Matrix API links 
+    
+    Based on the given lat/lon of a home address and a dictionary constructed
+    from the get_yelp_results() function above, returns 3 links that each yield a 
+    JSON object.
+    
+    Returns:
+        First:
+            walk_link: a Google Distance Matrix API link with parameter "mode=walking"
+        
+        Second:
+            bad_drive_link: a Google Distance Matrix API link with parameters "mode=driving", 
+                            "departure_time=1482793200" and "trafic_model=pessimistic"
+        
+        Third:
+            good_drive_link: a Google Distance Matrix API link with parameters "mode="driving" 
+                             (this effectively ignores the possibility of traffic)
+    
+    """
     home = '{},{}'.format(lat,lon)
     search_string= '|'.join(['{},{}'.format(business['lat'], business['lon']) 
                         for business in ratings_dict.values()])
@@ -115,11 +140,21 @@ def get_distances_link(lat, lon, ratings_dict):
 
 
 def get_next_weekday_6pm():
+    """Currently returns a string of the time since epoch of December 26th, 2016 at 6:00pm"""
     #IMPLEMENT THIS
     return '1482793200' #Last monday in December 2016
 
 
 def get_business_distances(link):
+    """Makes a request to Google Distances Matrix API. 
+    
+    Returns a list of travel times resulting from the JSON response of the 
+    given link to Google Distance Matrix API.
+    
+    Automatically detects whether the parameter for traffic is included and returns
+    the appropriate travel times.
+    """
+    
     distance_matrix_request = requests.get(link)
     if distance_matrix_request.status_code != 200:
         print('Status Code Error. Expected 200, got {}'\
@@ -157,6 +192,7 @@ def get_business_distances(link):
 
 
 def measure_distances(latitude1, lng1, latitude2, lng2):
+    """Returns the distance in miles between 2 global coordinates"""
     lat1 = radians(latitude1)
     lon1 = radians(lng1)
     lat2 = radians(latitude2)
@@ -170,6 +206,17 @@ def measure_distances(latitude1, lng1, latitude2, lng2):
 
 
 def get_closest_police(state, lat, lng):
+    """Makes a query against the database for Police Information.Distance
+    
+    Returns list of information regarding the nearest police agency to the 
+    given coordinates.
+    
+    Resulting List elments (in order):
+        Distance (miles), Percentile Rank of Violent Crimes per 100k Residents, 
+        number of violent crimes per 100k residents, percentile rank of Property 
+        Crimes per 100k residents, number of Property Crimes per 100k residents,
+        Agency Name, Population Served by Agency.
+    """
     try:
         conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'"\
                                           .format(DBNAME, DBUSER, DBHOST, DBPW))
@@ -201,13 +248,15 @@ def get_closest_police(state, lat, lng):
             property_pc = agency[25]
             pop_served = agency[7]
             agency_name = agency[0]
-            closest_agency = agency
             pol_info = [closest_dist, violent_rank, violent_pc, property_rank, 
-                        property_pc, agency_name, pop_served, closest_agency]
+                        property_pc, agency_name, pop_served]
     return pol_info
 
 
 def get_lum(zipcode):
+    """Searches database for corresponding LUM value to the given zipcode. 
+    
+    Returns: Floating Point Number"""
     try:
         conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'"\
                                           .format(DBNAME, DBUSER, DBHOST, DBPW))
@@ -227,7 +276,13 @@ def get_lum(zipcode):
     return None
 
 def get_box_plot(lst, name):
+    """Constructs a box and whisker plot off a given list of numbers. 
     
+    Saves the image to the folder /utakeout/static/img with a name constructed
+    from the timestamp of the function call and the given zipcode. 
+    
+    Returns: filename as string
+    '"""
     figure = pyplot.figure(1,figsize=(3,2))
     ax = figure.add_subplot(111)
     ax.get_xaxis().tick_bottom()
@@ -284,24 +339,28 @@ def get_box_plot(lst, name):
     
     
 def analysis(address):
+    """Performs a detailed analysis of takeout information off a given address.
+    
+    Returns: Dictionary of information for website display.
+    """
     address_dict = get_address_info(address)
     if address_dict is None:
         return 'The address you gave could not be located! We\'re sorry!\nYou entered {}'.format(address)
     yelp_dict, yelp_results = get_yelp_results(address_dict['lat'],address_dict['lng'])
     if not yelp_dict:
-        return 'Something went wrong! Please try again or contact the administrator!'
+        raise Process_fail
     walk_link, bad_drive_link, good_drive_link = get_distances_link(address_dict['lat'], 
                                                                     address_dict['lng'],
                                                                     yelp_dict)
     if any(not x for x in [walk_link, bad_drive_link, good_drive_link]):
-        return 'Something went wrong! Please try again or contact the administrator!'
+        raise Process_fail
     
     #Get distance list    
     walk_distance = get_business_distances(walk_link)
     good_drive_dist = get_business_distances(good_drive_link)
     bad_drive_dist = get_business_distances(bad_drive_link)
     if any(not x for x in [walk_distance, good_drive_dist, bad_drive_dist]):
-        return 'Something went wrong! Please try again or contact the administrator!'
+        raise Process_fail
     
     #Get Box Plots    
     walk_img = get_box_plot(walk_distance, str(address_dict['postal_code']))
@@ -309,7 +368,7 @@ def analysis(address):
     bd_img = get_box_plot(bad_drive_dist, str(address_dict['postal_code']))
     
     if any((not x) for x in [bd_img, gd_img, walk_img]):
-        return 'Something went wrong! Please try again or contact the administrator!'
+        raise Process_fail
         
     pol_info = get_closest_police(str(address_dict['state']), 
                                       address_dict['lat'], 
@@ -317,7 +376,7 @@ def analysis(address):
     lum = get_lum(address_dict['postal_code'])
     
     if not pol_info or not lum:
-        return 'Something went wrong! Please try again or contact the administrator!'
+        raise Process_fail
         
     ratings = [(business_dict['rating'],business_dict['review_count'], 
                                         business_dict['distance']) for 
@@ -373,6 +432,10 @@ def analysis(address):
     return final_result
 
 def nth(percentile):
+    """Constructs Percentile Label
+    
+    Returns a string
+    """
     last_digit = percentile[-1]
     if percentile in ['11','12','13','14','15','16','17','18','19']:
         return '{}th'.format(percentile)
@@ -384,6 +447,10 @@ def nth(percentile):
         return '{}rd'.format(percentile)
 
 def grader (z):
+    """Convers a numeric value into a letter grade.Convers
+    
+    Returns a string
+    """
     if   z < 60:
         return "F"
     elif 60 <= z < 63:
@@ -413,6 +480,17 @@ def grader (z):
         
         
 def grade_walk_func(num_walkable, lum, avg_walk_time, violent_crime_rank, property_crime_rank):
+    """Creates 0-100 grade based on inputs and returns that grade as a letter.
+    
+    Inputs:
+        First: num_walkable - an integer that is the count of restaurants within 1 miles
+        Second: lum - a floating point number between 0 and 1
+        Third: Avg_walk_time - a floating point number greater than 0
+        Fourth: Violent_crime_rank - a floating point number between 0 and 1
+        Fifth: property_crime_rank - a floating point number between 0 and 1
+        
+    Returns: a string
+    """
     walk_range = {1 : [0, 15], .8 : [15, 30], .6 : [30, 45], .4 : [45, 60], .2 : [60, 99999999]}
     for k,v in walk_range.items():
         if v[0] <= avg_walk_time < v[1]:
@@ -426,6 +504,16 @@ def grade_walk_func(num_walkable, lum, avg_walk_time, violent_crime_rank, proper
     
     
 def grade_drive_func(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime_rank):
+    """Creates 0-100 grade based on inputs and returns that grade as a letter.
+    
+    Inputs:
+        First: avg_good_dr - a floating point number greater than 0
+        Second: avg_bad_dr - a floating point number greater than 0
+        Fourth: Violent_crime_rank - a floating point number between 0 and 1
+        Fifth: property_crime_rank - a floating point number between 0 and 1
+        
+    Returns: a string
+    """
     drive_variance = avg_bad_dr - avg_good_dr
     good_ranges = {1 : [0, 5], .8 : [5, 10], .6 : [10, 15], .4 : [15, 20], .2 : [25, 99999999]}
     bad_ranges = {1 : [0, 10], .8 : [10, 20], .6 : [20, 30], .4 : [30, 40], .2 : [40, 99999999]}
@@ -451,6 +539,11 @@ def grade_drive_func(avg_good_dr, avg_bad_dr, violent_crime_rank, property_crime
     
     
 def grade(factor_dict):
+    """Constructs a walk_grade and a drive_grade from a dictionary of factors
+    constructed in the analysis() function. 
+    
+    Returns a 2 element tupple of strings
+    """
     walk_grade = grade_walk_func(factor_dict['num_walkable'], factor_dict['lum'], 
                                 factor_dict['avg_walk'], factor_dict['violent_rank'], 
                                 factor_dict['property_rank'])
@@ -463,4 +556,4 @@ def grade(factor_dict):
 
 #analysis('6 E 39th St, New York, NY 10016')
 
-pprint(analysis('500th ave 1000'))
+##pprint(analysis('500th ave 1000'))
