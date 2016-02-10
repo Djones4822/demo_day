@@ -1,6 +1,6 @@
 .cover-text {
-    background-color: rgba(0,0,0,0.4);
-    padding-top:50px;
+    background-color: rgba(68,88,120,0.4);
+    padding-top:75px;
     padding-bottom:5px;
 }
 
@@ -302,8 +302,8 @@ td {
 }
 
 .lum img{
-    margin-top:-50px;
-    margin-bottom:20px;
+    display:block;
+    margin:-50px auto 20px auto;
 }
 
 .about {
