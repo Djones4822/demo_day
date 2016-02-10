@@ -301,6 +301,7 @@ td {
 .about {
     overflow:visible;
 }
+
 .about h2 {
     text-transform: uppercase;
     font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
@@ -337,7 +338,6 @@ td {
     font-weight:;
     font-size:.9em;
     margin-bottom:20px;
-}
 }
 
 #map {

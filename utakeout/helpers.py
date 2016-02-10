@@ -278,7 +278,7 @@ def get_box_plot(lst, name):
 
     timestamp = str(time.time()).replace('.','')
     filename = '{}{}.png'.format(name,timestamp)
-    #figure.savefig(os.path.join('utakeout','static','img','plot',filename), bbox_inches='tight')
+    figure.savefig(os.path.join('utakeout','static','img','plot',filename), bbox_inches='tight')
     figure.clear()
     return filename
     
