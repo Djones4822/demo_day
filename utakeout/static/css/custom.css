@@ -1,3 +1,9 @@
+.cover-text {
+    background-color: rgba(0,0,0,0.4);
+    padding-top:50px;
+    padding-bottom:5px;
+}
+
 .go-button {
     padding:100px;
 }
@@ -13,7 +19,7 @@
     content: "";
     display: block;
     height: 0;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     padding-bottom: 100%;
     width: 100%;
     background:#445878;
