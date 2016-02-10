@@ -5,6 +5,14 @@ import json
 import os
 # from forms import AddressForm
 
+@app.errorhandler(404)
+def not_found_eror(error):
+	return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+	return render_template('500.html'), 500
+
 
 @app.route('/', methods=['GET','POST'])
 def index():

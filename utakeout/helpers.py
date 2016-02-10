@@ -105,7 +105,6 @@ def get_yelp_results(lat, lon):
         ratings_dict[name] = {'name':name, 'review_count':review_count, 'rating':rating, 
                             'lat':lat, 'lon':lon, 'deals':deals, 'distance':distance, 'url':url,
                             'categories':return_cat}
-    pprint(ratings_dict)
     return ratings_dict, results_json
         
 
