@@ -73,11 +73,11 @@
                 <div class="row">
                     <div class="col-xs-4"></div>
                     <div class="col-xs-4">    
-                        <form class="form" role="form" action="" method="POST">
+                        <form class="form" role="form" action="" method="POST" onsubmit="gobutton.disabled = true">
                             <div class="form-group">
                                 <input name="address" class="form-control" placeholder="Address">
                                 <div style="padding:20px;">
-                                    <button type="submit" class="btn btn-primary btn-xl">Go!</button>
+                                    <button type="submit" name="gobutton" class="btn btn-primary btn-xl">Go!</button>
                                 </div>
                             </div>
                         </form>
