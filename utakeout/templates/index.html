@@ -68,14 +68,18 @@
                 <h1>uTakeout</h1>
                 <hr>
                 <div class="">
+                	{% if message %}
+                	<p style="text-transform:uppercase;color:#D10000;font-weight:700">{{ message }}</p>
+                	{% else %}
                     <p>Have you ever wondered how good the takeout is around you? Are you traveling to a new location and trying to decide on a hotel? Are you just generally curious about takeout??</p>
                     <p>Enter your address below and we’ll use Yelp, Google, FBI crime data, and local land use information to grade the quality of takeout at your location! We’ll tell you information about the restaurants, your ability to walk and drive to these restaurants, and how safe you are getting to them!</p>
+                    {% endif %}
                 </div>
                 <div class="row">
                     <div class="col-xs-4"></div>
                     <div class="col-xs-4">    
                         <form class="form" role="form" action="" method="POST" onsubmit="gobutton.disabled = true">
-                            <div class="form-group" style="padding-top:30px;">
+                            <div class="form-group" >
                                 <input name="address" class="form-control" placeholder="Address" required>
                                 <div style="padding:20px;">
                                     <button type="submit" name="gobutton" class="btn btn-primary btn-xl">Go!</button>
@@ -86,7 +90,7 @@
                         
                     <div class="col-xs-4"></div>
                 </div>
-                <p style="text-transform:uppercase;color:#D10000;font-weight:700">{{ message }}</p>
+                
             </div>
         </div>
     </header>

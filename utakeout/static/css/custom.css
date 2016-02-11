@@ -1,7 +1,11 @@
 .cover-text {
     background-color: rgba(68,88,120,0.4);
-    padding-top:75px;
+    padding-top:50px;
     padding-bottom:5px;
+}
+
+.cover-text p{
+    font-size:1em;
 }
 
 .go-button {
