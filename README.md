@@ -1,4 +1,4 @@
-# b4-demo-day-g1
+# b4-demo-day-g1, webapp for Rmotr Python Class
 uTakeout  
 
 ## General
@@ -21,7 +21,7 @@ When we think about the Quality of nearby takeout, often what comes to mind is t
 + Add Walk and Drive time histograms 
 + Change Crime Statistics to Robbery, Larceny and Auto Theft
 + Implement dynamic weighting that redistributes the factor weight according to how far away the police agency is
-+ Change layout to 1-2-1-map (now it’s 1-3-map)
++ Change layout to 1-2-1-map (now itâ€™s 1-3-map)
 + Build JS popup box that explains the LUM and Box Plots 
 + Map travel distances to restaurants (refactor distance collection process)
 + Improve restaurant grading
